@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html lnag="en">
+	<head>
+    <title>Pond Volume Calculator</title>
+    <style>
+      
+      
+      body {
+        background-color: #dde8f7;
+        font-family:Georgia, 'Times New Roman', Times, serif;
+      }
+      
+
+        .pv-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      margin: auto;
+      text-align: center;
+      font-size: 1rem;
+      
+      justify-content: center;
+        }
+      
+      .chart-div {
+        width: 80%;
+        h
+        align-self:auto;
+      }
+
+      .form {
+        padding: 0.25rem;
+      }
+
+      .li-title {
+        padding: 0.25rem;
+      }
+
+      .li-wrapper {
+        padding: 0.25rem;
+      }
+
+      input {
+        width: 30%;
+      }
+
+      .li-wrapper {
+      display: flex;
+      
+      width: 90%;
+      height: 20rem;
+      margin: auto;
+      text-align: center;
+      font-size: 1rem;
+      padding: 3rem;
+      justify-content: left;
+      align-items: center;
+        }
+      
+      .jl {
+        justify-self: left;
+        align-self: flex-start;
+        
+      }
+
+      .pv-entry {
+        width: 50%;
+      }
+
+      
+    </style>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script type = "text/javascript" src="assets/js/main.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  </head>
+<body>
+  <div class="pv-wrapper">
+  <h2>Pond Volume Calculator</h2>
+  
+
+  <p class="jl"><label>1<sup>st</sup> Surface Area: </sup></label>
+  <input id="firstSurfaceArea" type="number" class="pv-entry" min="0" placeholder="Square Feet" ></p>
+
+  <p class="jl"><label>2<sup>nd</sup> Surface Area: </sup></label>
+    <input id="secondSurfaceArea" type="number" min="0" class="pv-entry" placeholder="Square Feet" ></p>
+
+  <p class="jl"><label>Height: </label>
+    <input id="height" type="number" min="0" placeholder="Feet" style="width:70%;"></p>
+  
+  <p class="jl">Volume: <span id="volume"></span> ft<sup>3</sup></p>
+
+  <input type="button" value ="Calculate" style="width:70%;" onclick="calculateVolume();">
+</div>
+
+  <hr>
+  
+  <div class="li-wrapper">
+    <form class="left-form">
+      <h2 id="li-title" class="item1">Linear Interpolation Calculator</h2>
+
+      <p class="jl"><label>X<sub>1</sub></sub></sup></label>
+      <input id="xone" type="number" placeholder="" ></p>
+    
+      <p id="g1-2"><label>Y<sub>1</sub></sub></sup></label>
+      <input id="yone" type="number" placeholder="" ></p>
+      
+      <p id="g2-1"><label>X<sub>2</sub></sub></sup></label>
+      <input id="xtwo" type="number" placeholder="" ></p>
+
+      <p id="g2-2"><label>Y<sub>2</sub></sub></sup></label>
+      <input id="ytwo" type="number" placeholder="" ></p>
+      
+      <p id="g3-1"><label>X<sub></sub></sub></sup></label>
+      <input id="x" type="number" placeholder="" ></p>
+      </p id="g3-2">Y = <span id="y"></span></p>  
+
+      <input type="button" style="width:70%;" value ="Interpolate" onclick="interpolate();">
+    </form>
+    <div class="chart-div">
+    <canvas id="myChart"></canvas>
+  </div>
+  </div>
+
+  <script>
+    let x1 = 0;
+    let x2 = 1;
+    let y1 = 0;
+    let y2 = 1;
+    let xo = 0.5;
+    let y = 0.5;
+    let equ = "y(x) = x";
+    var ctx = document.getElementById('myChart');
+    
+    function createGraph() {
+    var myLineChart = new Chart(ctx, 
+      {
+          type: 'line',
+          data: {
+            datasets: [{
+              label: equ,
+              data: [{
+                x: x1,
+                y: y1
+              }, {
+                x: xo,
+                y: y
+              }, {
+                x: x2,
+                y: y2
+              }], 
+              backgroundColor: ['rgba(255, 99, 132, 0.7)'],
+              borderWidth: 5
+            }]
+          }
+        });
+      }      
+    function calculateVolume() {
+      let saone = Number(document.getElementById("firstSurfaceArea").value);
+      let satwo = Number(document.getElementById("secondSurfaceArea").value);
+      let h = Number(document.getElementById("height").value);
+      let v = (h/3) * (saone + satwo + Math.sqrt(saone * satwo));
+
+      document.getElementById("volume").innerHTML = v.toFixed(2);
+    }     
+
+    function interpolate() {
+      x1 = Number(document.getElementById("xone").value);
+      x2 = Number(document.getElementById("xtwo").value);
+      y1 = Number(document.getElementById("yone").value);
+      y2 = Number(document.getElementById("ytwo").value);
+      let xo = Number(document.getElementById("x").value);
+
+
+      if (x <= x2 && x >= x1) {
+      alert("Please recheck ordering of (x1,y1) and (x2,y2), x is out of bounds or order is reversed.")
+      }   else {
+              y = y1 + (xo - x1) * (y2 - y1) / (x2 - x1);
+              document.getElementById("y").innerHTML = y.toFixed(2);
+              let m = (y2 - y1) / (x2 - x1);
+              let yi = y - (m * xo);
+              equ = "y(x) = " + String(m.toFixed(2)) + "x + " + String(yi.toFixed(2));
+              createGraph();
+      }
+      
+   }  
+   createGraph();        
+  </script>
+
+</body>
+</html>
